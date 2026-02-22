@@ -1,40 +1,58 @@
-.wls-logo-grid {
-    display: grid;
-    /* تعداد ستون‌ها توسط PHP مقداردهی می‌شود */
-    grid-template-columns: repeat(var(--wls-cols, 4), 1fr);
-    background-color: #0a192f;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+:root {
+    --wls-item-bg: #0a192f;
+    --wls-border-color: rgba(255, 255, 255, 0.1);
+    --wls-border-width: 1px;
+    --wls-cell-height: 150px;
+    --wls-img-height: 70px;
+    --wls-opacity: 0.3;
+}
+
+.wls-wrapper {
     width: 100%;
+    overflow: hidden;
+}
+
+.wls-logo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    background-color: var(--wls-item-bg);
     margin: 0 auto;
 }
 
 .wls-logo-item {
-    position: relative;
-    height: 120px; /* ارتفاع کنترل شده و جذاب */
+    width: 25%;
+    height: var(--wls-cell-height);
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 25px;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background-color: transparent;
-    transition: background-color 0.3s ease;
+    padding: 20px;
+    border-left: var(--wls-border-width) solid var(--wls-border-color);
+    border-bottom: var(--wls-border-width) solid var(--wls-border-color);
 }
 
-.wls-logo-item img {
-    max-width: 100%;
-    max-height: 55px;
-    width: auto;
-    height: auto;
+.wls-logo-item:nth-child(4n) {
+    border-left: none;
+}
+
+.wls-logo-item:nth-child(n+5) {
+    border-bottom: none;
+}
+
+.wls-logo-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wls-logo-inner img {
+    max-width: 90%;
+    max-height: var(--wls-img-height);
     object-fit: contain;
-    opacity: 0.25;
+    opacity: var(--wls-opacity);
     filter: brightness(0) invert(1);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.wls-logo-item:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    transition: 0.4s ease;
 }
 
 .wls-logo-item:hover img {
@@ -42,13 +60,25 @@
     transform: scale(1.1);
 }
 
-.wls-logo-item { transition: opacity 0.6s, transform 0.6s, filter 0.6s; }
-.wls-fade-out { opacity: 0; transform: scale(0.9); }
+/* انیمیشن‌ها */
+.wls-fade-out { opacity: 0; }
+.wls-zoom .wls-fade-out { opacity: 0; transform: scale(0.4); }
+.wls-slide .wls-fade-out { opacity: 0; transform: translateY(30px); }
+.wls-rotate .wls-fade-out { opacity: 0; transform: rotateX(90deg); }
+.wls-blur .wls-fade-out { opacity: 0; filter: blur(15px); }
 
-@media (max-width: 1024px) {
-    .wls-logo-grid { grid-template-columns: repeat(3, 1fr); }
-}
+/* ریسپانسیو فقط با تغییر Scale */
 @media (max-width: 768px) {
-    .wls-logo-grid { grid-template-columns: repeat(2, 1fr); }
-    .wls-logo-item { height: 100px; padding: 15px; }
+    .wls-logo-grid {
+        width: 100%;
+        transform: scale(0.9);
+        transform-origin: center top;
+    }
+}
+@media (max-width: 480px) {
+    .wls-logo-grid {
+        width: 140%;
+        margin-left: -20%;
+        transform: scale(0.7);
+    }
 }
