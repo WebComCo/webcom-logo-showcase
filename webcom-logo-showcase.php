@@ -15,15 +15,13 @@ define( 'WLS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once WLS_PATH . 'includes/cpt.php';
 
-add_action( 'wp_enqueue_scripts', 'wls_enqueue_assets' );
-function wls_enqueue_assets() {
-    wp_enqueue_style( 'wls-style', WLS_URL . 'assets/css/style.css', array(), '1.0.0' );
-    wp_enqueue_script( 'wls-script', WLS_URL . 'assets/js/script.js', array('jquery'), '1.0.0', true );
-}
+add_action( 'wp_enqueue_scripts', function() {
+    wp_enqueue_style( 'wls-style', WLS_URL . 'assets/css/style.css', array(), '2.0.0' );
+    wp_enqueue_script( 'wls-script', WLS_URL . 'assets/js/script.js', array('jquery'), '2.0.0', true );
+});
 
-add_action( 'elementor/widgets/register', 'wls_register_logo_widget' );
-
-function wls_register_logo_widget( $widgets_manager ) {
+add_action( 'elementor/widgets/register', function( $widgets_manager ) {
+    if ( ! did_action( 'elementor/loaded' ) ) return;
     require_once WLS_PATH . 'includes/elementor-addon.php';
     $widgets_manager->register( new \Webcom_Logo_Widget() );
-}
+});
