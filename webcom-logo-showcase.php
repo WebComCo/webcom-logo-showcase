@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Webcom Logo Showcase
  * Description: نمایش لوگوی مشتریان با افکت‌های پیشرفته و سازگار با المنتور.
- * Version: 1.0.0
+ * Version: 1.2.0
  * Author: webcom (MehrDad)
  * Author URI: https://webcomco.com
  * Text Domain: webcom-logo
