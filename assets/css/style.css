@@ -7,78 +7,175 @@
     --wls-opacity: 0.3;
 }
 
-.wls-wrapper {
-    width: 100%;
-    overflow: hidden;
-}
+.wls-wrapper { width: 100%; display: flex; justify-content: center; }
 
 .wls-logo-grid {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
+    display: flex; flex-wrap: wrap; width: 100%;
     background-color: var(--wls-item-bg);
-    margin: 0 auto;
+    transform-origin: top center;
 }
 
 .wls-logo-item {
-    width: 25%;
-    height: var(--wls-cell-height);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    width: 25%; height: var(--wls-cell-height);
+    box-sizing: border-box; display: flex; align-items: center; justify-content: center;
     border-left: var(--wls-border-width) solid var(--wls-border-color);
     border-bottom: var(--wls-border-width) solid var(--wls-border-color);
+    overflow: hidden;
 }
 
-.wls-logo-item:nth-child(4n) {
-    border-left: none;
-}
-
-.wls-logo-item:nth-child(n+5) {
-    border-bottom: none;
-}
+.wls-logo-item:nth-child(4n) { border-left: none; }
+.wls-logo-item:nth-child(n+5) { border-bottom: none; }
 
 .wls-logo-inner {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    /* این خط باعث می‌شود المان در پایان انیمیشن خروج، در همان وضعیت (مثلاً مخفی) بماند */
+    animation-fill-mode: both !important;
 }
 
+
+
+/* تصویر لوگو */
 .wls-logo-inner img {
-    max-width: 90%;
-    max-height: var(--wls-img-height);
-    object-fit: contain;
-    opacity: var(--wls-opacity);
+    max-width: 85%;
+    max-height: var(--wls-img-height, 70px);
+    opacity: var(--wls-opacity, 0.3);
     filter: brightness(0) invert(1);
-    transition: 0.4s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.wls-logo-item:hover img {
+/* هاور پیش‌فرض */
+.wls-logo-inner:hover img {
     opacity: 1;
+}
+
+.wls-logo-inner:not([class*="elementor-animation-"]):hover {
     transform: scale(1.1);
 }
 
-/* انیمیشن‌ها */
-.wls-fade-out { opacity: 0; }
-.wls-zoom .wls-fade-out { opacity: 0; transform: scale(0.4); }
-.wls-slide .wls-fade-out { opacity: 0; transform: translateY(30px); }
-.wls-rotate .wls-fade-out { opacity: 0; transform: rotateX(90deg); }
-.wls-blur .wls-fade-out { opacity: 0; filter: blur(15px); }
+/* ریسپانسیو اسکیل (ثابت) */
+@media (max-width: 1024px) { .wls-logo-grid { transform: scale(0.85); margin-bottom: -40px; } }
+@media (max-width: 767px) { .wls-logo-grid { width: 140%; transform: scale(0.6); margin-left: -20%; margin-bottom: -100px; } }
 
-/* ریسپانسیو فقط با تغییر Scale */
-@media (max-width: 768px) {
-    .wls-logo-grid {
-        width: 100%;
-        transform: scale(0.9);
-        transform-origin: center top;
+.wls-logo-inner.animated {
+    animation-fill-mode: both;
+    animation-timing-function: ease;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
+.fadeOut { animation-name: fadeOut; }
+
+@keyframes fadeOutUp {
+    to { opacity: 0; transform: translateY(-30px); }
+}
+.fadeOutUp { animation-name: fadeOutUp; }
+
+@keyframes fadeOutDown {
+    to { opacity: 0; transform: translateY(30px); }
+}
+.fadeOutDown { animation-name: fadeOutDown; }
+
+@keyframes fadeOutLeft {
+    to { opacity: 0; transform: translateX(-30px); }
+}
+.fadeOutLeft { animation-name: fadeOutLeft; }
+
+@keyframes fadeOutRight {
+    to { opacity: 0; transform: translateX(30px); }
+}
+.fadeOutRight { animation-name: fadeOutRight; }
+
+@keyframes zoomOut {
+    to { opacity: 0; transform: scale(0.5); }
+}
+.zoomOut { animation-name: zoomOut; }
+
+@keyframes zoomOutUp {
+    to { opacity: 0; transform: scale(0.5) translateY(-40px); }
+}
+.zoomOutUp { animation-name: zoomOutUp; }
+
+@keyframes zoomOutDown {
+    to { opacity: 0; transform: scale(0.5) translateY(40px); }
+}
+.zoomOutDown { animation-name: zoomOutDown; }
+
+@keyframes zoomOutLeft {
+    to { opacity: 0; transform: scale(0.5) translateX(-40px); }
+}
+.zoomOutLeft { animation-name: zoomOutLeft; }
+
+@keyframes zoomOutRight {
+    to { opacity: 0; transform: scale(0.5) translateX(40px); }
+}
+.zoomOutRight { animation-name: zoomOutRight; }
+
+@keyframes slideOutUp {
+    to { transform: translateY(-100%); opacity: 0; }
+}
+.slideOutUp { animation-name: slideOutUp; }
+
+@keyframes slideOutDown {
+    to { transform: translateY(100%); opacity: 0; }
+}
+.slideOutDown { animation-name: slideOutDown; }
+
+@keyframes slideOutLeft {
+    to { transform: translateX(-100%); opacity: 0; }
+}
+.slideOutLeft { animation-name: slideOutLeft; }
+
+@keyframes slideOutRight {
+    to { transform: translateX(100%); opacity: 0; }
+}
+.slideOutRight { animation-name: slideOutRight; }
+
+@keyframes rotateOut {
+    to { opacity: 0; transform: rotate(200deg); }
+}
+.rotateOut { animation-name: rotateOut; }
+
+@keyframes rotateOutUpLeft {
+    to { opacity: 0; transform: rotate(-45deg) translateY(-40px); }
+}
+.rotateOutUpLeft { animation-name: rotateOutUpLeft; }
+
+@keyframes rotateOutUpRight {
+    to { opacity: 0; transform: rotate(45deg) translateY(-40px); }
+}
+.rotateOutUpRight { animation-name: rotateOutUpRight; }
+
+@keyframes rotateOutDownLeft {
+    to { opacity: 0; transform: rotate(-45deg) translateY(40px); }
+}
+.rotateOutDownLeft { animation-name: rotateOutDownLeft; }
+
+@keyframes rotateOutDownRight {
+    to { opacity: 0; transform: rotate(45deg) translateY(40px); }
+}
+.rotateOutDownRight { animation-name: rotateOutDownRight; }
+
+@keyframes bounceOut {
+    20% { transform: scale(0.9); }
+    50%, 55% { opacity: 1; transform: scale(1.1); }
+    to { opacity: 0; transform: scale(0.3); }
+}
+.bounceOut { animation-name: bounceOut; }
+
+@keyframes lightSpeedOut {
+    to {
+        transform: translateX(100%) skewX(30deg);
+        opacity: 0;
     }
 }
-@media (max-width: 480px) {
-    .wls-logo-grid {
-        width: 140%;
-        margin-left: -20%;
-        transform: scale(0.7);
+.lightSpeedOut { animation-name: lightSpeedOut; }
+
+@keyframes rollOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%) rotate(120deg);
     }
 }
+.rollOut { animation-name: rollOut; }

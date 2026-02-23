@@ -4,33 +4,92 @@ use Elementor\Controls_Manager;
 
 class Webcom_Logo_Widget extends Widget_Base {
     public function get_name() { return 'webcom_logo_showcase'; }
-    public function get_title() { return 'لوگوی مشتریان (وبکام)'; }
+    public function get_title() { return 'لوگوی مشتریان 4x2'; }
     public function get_icon() { return 'eicon-gallery-grid'; }
-    public function get_categories() { return [ 'general' ]; }
+    public function get_categories() { return [ 'webcom' ]; }
 
     protected function register_controls() {
-        // --- بخش محتوا ---
         $this->start_controls_section('content', ['label' => 'تنظیمات']);
 
-        $this->add_control('animation_style', [
-            'label' => 'افکت انیمیشن',
-            'type' => Controls_Manager::SELECT,
-            'default' => 'wls-fade',
-            'options' => [
-                'wls-fade' => 'Fade', 'wls-zoom' => 'Zoom', 'wls-slide' => 'Slide', 'wls-rotate' => 'Rotate', 'wls-blur' => 'Blur'
-            ],
+         $this->add_control('wls_entrance_anim', [
+            'label' => 'انیمیشن ورود (Entrance)',
+            'type' => Controls_Manager::ANIMATION,
+            'default' => 'fadeIn', // پیش‌فرض
         ]);
 
-        $this->add_control('swap_count', [
-            'label' => 'تعداد لوگوهای در حال تغییر (همزمان)',
+
+        $this->add_control('hover_animation', [
+            'label' => 'انیمیشن هاور',
+            'type' => Controls_Manager::HOVER_ANIMATION,
+        ]);
+
+        $this->add_control('wls_exit_anim', [
+            'label' => 'انیمیشن خروج (Exit)',
+            'type' => Controls_Manager::SELECT,
+            'default' => 'fadeOutUp',
+            'options' => [
+                // Fading
+                'fadeOut' => 'Fade Out',
+                'fadeOutDown' => 'Fade Out Down',
+                'fadeOutLeft' => 'Fade Out Left',
+                'fadeOutRight' => 'Fade Out Right',
+                'fadeOutUp' => 'Fade Out Up',
+
+                // Zooming
+                'zoomOut' => 'Zoom Out',
+                'zoomOutDown' => 'Zoom Out Down',
+                'zoomOutLeft' => 'Zoom Out Left',
+                'zoomOutRight' => 'Zoom Out Right',
+                'zoomOutUp' => 'Zoom Out Up',
+
+                // Bouncing
+                'bounceOut' => 'Bounce Out',
+                'bounceOutDown' => 'Bounce Out Down',
+                'bounceOutLeft' => 'Bounce Out Left',
+                'bounceOutRight' => 'Bounce Out Right',
+                'bounceOutUp' => 'Bounce Out Up',
+
+                // Sliding
+                'slideOutDown' => 'Slide Out Down',
+                'slideOutLeft' => 'Slide Out Left',
+                'slideOutRight' => 'Slide Out Right',
+                'slideOutUp' => 'Slide Out Up',
+
+                // Rotating
+                'rotateOut' => 'Rotate Out',
+                'rotateOutDownLeft' => 'Rotate Out Down Left',
+                'rotateOutDownRight' => 'Rotate Out Down Right',
+                'rotateOutUpLeft' => 'Rotate Out Up Left',
+                'rotateOutUpRight' => 'Rotate Out Up Right',
+
+                // Light Speed
+                'lightSpeedOut' => 'Light Speed Out',
+
+                // Specials
+                'rollOut' => 'Roll Out',
+
+            ]
+        ]);
+
+        $this->add_control('wls_swap_count', [
+            'label' => 'تعداد تعویض همزمان',
             'type' => Controls_Manager::NUMBER,
             'min' => 1, 'max' => 4, 'default' => 2,
         ]);
 
-        $this->add_control('swap_interval', [
-            'label' => 'فاصله زمانی (میلی‌ثانیه)',
+        $this->add_control('wls_interval', [
+            'label' => 'فاصله زمانی بین هر تعویض (ms)',
             'type' => Controls_Manager::NUMBER,
             'default' => 3000,
+        ]);
+
+        $this->add_control('wls_duration', [
+            'label' => esc_html__('مدت زمان اجرای انیمیشن (ms)'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['ms', 'custom'],
+            'range' => ['ms' => ['min' => 0, 'max' => 2000, 'step' => 10]],
+            'default' => ['unit' => 'ms', 'size' => 1000],
+            'selectors' => ['{{WRAPPER}}' => '--wls-anim-duration: {{SIZE}}{{UNIT}};'],
         ]);
 
         $this->end_controls_section();
@@ -65,7 +124,7 @@ class Webcom_Logo_Widget extends Widget_Base {
         // --- بخش استایل لوگوها ---
         $this->start_controls_section('logo_style', ['label' => 'ابعاد و لوگوها', 'tab' => Controls_Manager::TAB_STYLE]);
 
-        $this->add_responsive_control('cell_height', [
+        $this->add_responsive_control('wls_cell_height', [
             'label' => 'ارتفاع باکس لوگو',
             'type' => Controls_Manager::SLIDER,
             'range' => ['px' => ['min' => 100, 'max' => 250, 'step' => 1]],
@@ -74,15 +133,15 @@ class Webcom_Logo_Widget extends Widget_Base {
         ]);
 
         $this->add_responsive_control('img_max_height', [
-            'label' => 'حداکثر ارتفاع لوگو (تصویر)',
+            'label' => 'حداکثر ارتفاع تصویر',
             'type' => Controls_Manager::SLIDER,
             'range' => ['px' => ['min' => 50, 'max' => 200, 'step' => 1]],
             'default' => ['size' => 70],
             'selectors' => ['{{WRAPPER}} .wls-logo-grid' => '--wls-img-height: {{SIZE}}px;']
         ]);
 
-        $this->add_control('logo_opacity', [
-            'label' => 'شفافیت لوگو (قبل از هاور)',
+        $this->add_control('wls_opacity', [
+            'label' => 'شفافیت قبل هاور',
             'type' => Controls_Manager::SLIDER,
             'range' => ['px' => ['min' => 0.01, 'max' => 1, 'step' => 0.01]],
             'default' => ['size' => 0.3],
@@ -95,11 +154,11 @@ class Webcom_Logo_Widget extends Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        $query = new WP_Query(['post_type' => 'webcom_logo', 'posts_per_page' => 50, 'orderby' => 'rand']);
-        if ( ! $query->have_posts() ) return;
+        $query = new WP_Query(['post_type' => 'webcom_logo', 'posts_per_page' => 80, 'orderby' => 'rand']);
+        if (!$query->have_posts()) return;
 
         $all_logos = [];
-        while($query->have_posts()){
+        while ($query->have_posts()) {
             $query->the_post();
             $all_logos[] = [
                 'src' => get_the_post_thumbnail_url(null, 'full'),
@@ -109,20 +168,30 @@ class Webcom_Logo_Widget extends Widget_Base {
         }
         wp_reset_postdata();
 
-        $visible = array_slice($all_logos, 0, 8); // ثابت روی ۸ عدد
+        $visible = array_slice($all_logos, 0, 8);
         $pool = array_slice($all_logos, 8);
 
-        echo '<div class="wls-wrapper"><div class="wls-logo-grid '.esc_attr($settings['animation_style']).'" 
-                data-interval="'.esc_attr($settings['swap_interval']).'" 
-                data-count="'.esc_attr($settings['swap_count']).'">';
+        $entrance_anim = $settings['wls_entrance_anim'];
+        $exit_anim = $settings['wls_exit_anim'];
+        $hover_anim = $settings['hover_animation'] ? 'elementor-animation-' . $settings['hover_animation'] : '';
 
-        foreach($visible as $logo) {
-            echo '<div class="wls-logo-item"><div class="wls-logo-inner">';
-            echo '<a href="'.esc_url($logo['link']).'" target="_blank"><img src="'.esc_url($logo['src']).'" alt="'.esc_attr($logo['title']).'"></a>';
-            echo '</div></div>';
+        echo '<div class="wls-wrapper">
+                <div class="wls-logo-grid" 
+                data-interval="' . esc_attr($settings['wls_interval']) . '" 
+                data-count="' . esc_attr($settings['wls_swap_count']) . '"
+                data-entrance="' . esc_attr($entrance_anim) . '"
+                data-exit="' . esc_attr($exit_anim) . '"
+                data-duration="' . esc_attr($settings['wls_duration']['size'].$settings['wls_duration']['unit']) . '">';
+
+        foreach ($visible as $logo) {
+            echo '<div class="wls-logo-item">';
+            echo '<div class="wls-logo-inner ' . esc_attr($hover_anim) . '">';
+            echo '<a href="' . esc_url($logo['link']) . '" target="_blank"><img src="' . esc_url($logo['src']) . '" alt="' . esc_attr($logo['title']) . '"></a>';
+            echo '</div>';
+            echo '</div>';
         }
 
-        echo '<script class="wls-hidden-pool" type="application/json">'.json_encode($pool).'</script>';
+        echo '<script class="wls-hidden-pool" type="application/json">' . json_encode($pool) . '</script>';
         echo '</div></div>';
     }
 }
