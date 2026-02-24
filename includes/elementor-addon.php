@@ -155,40 +155,61 @@ class Webcom_Logo_Widget extends Widget_Base {
         $settings = $this->get_settings_for_display();
 
         $query = new WP_Query(['post_type' => 'webcom_logo', 'posts_per_page' => 80, 'orderby' => 'rand']);
-        if (!$query->have_posts()) return;
+        if ( ! $query->have_posts() ) {
+            if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+                echo 'لطفاً ابتدا چند لوگو در بخش مدیریت لوگوها اضافه کنید.';
+            }
+            return;
+        }
 
         $all_logos = [];
         while ($query->have_posts()) {
             $query->the_post();
+            $thumbnail = get_the_post_thumbnail_url(get_the_ID(), 'full');
             $all_logos[] = [
-                'src' => get_the_post_thumbnail_url(null, 'full'),
+                'src' => $thumbnail,
                 'link' => get_post_meta(get_the_ID(), '_logo_url', true) ?: '#',
                 'title' => get_the_title()
             ];
         }
         wp_reset_postdata();
 
+        if (count($all_logos) < 8) {
+            if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+                echo 'برای عملکرد صحیح انیمیشن، حداقل باید ۸ لوگو منتشر شده داشته باشید.';
+            }
+        }
+
         $visible = array_slice($all_logos, 0, 8);
         $pool = array_slice($all_logos, 8);
 
-        $entrance_anim = $settings['wls_entrance_anim'];
-        $exit_anim = $settings['wls_exit_anim'];
-        $hover_anim = $settings['hover_animation'] ? 'elementor-animation-' . $settings['hover_animation'] : '';
+        $exit     = isset($settings['wls_exit_anim'])     ? $settings['wls_exit_anim']     : 'fadeOutUp';
+        $entrance = isset($settings['wls_entrance_anim']) ? $settings['wls_entrance_anim'] : 'fadeInDown';
+        $interval = isset($settings['wls_interval'])      ? intval($settings['wls_interval']) : 3000;
+        $count    = isset($settings['wls_swap_count'])    ? intval($settings['wls_swap_count']) : 2;
+
+        $duration_size = isset($settings['wls_duration']['size']) ? intval($settings['wls_duration']['size']) : 1000;
+        $duration_unit = isset($settings['wls_duration']['unit']) ? $settings['wls_duration']['unit'] : 'ms';
+        $duration = $duration_size . $duration_unit;
+
+        $hover_class = !empty($settings['wls_hover_animation']) ? 'elementor-animation-' . $settings['wls_hover_animation'] : '';
 
         echo '<div class="wls-wrapper">
                 <div class="wls-logo-grid" 
-                data-interval="' . esc_attr($settings['wls_interval']) . '" 
-                data-count="' . esc_attr($settings['wls_swap_count']) . '"
-                data-entrance="' . esc_attr($entrance_anim) . '"
-                data-exit="' . esc_attr($exit_anim) . '"
-                data-duration="' . esc_attr($settings['wls_duration']['size'].$settings['wls_duration']['unit']) . '">';
+                data-interval="' . esc_attr($interval) . '" 
+                data-count="' . esc_attr($count) . '"
+                data-entrance="' . esc_attr($entrance) . '"
+                data-exit="' . esc_attr($exit) . '"
+                data-duration="' . esc_attr($duration) . '">';
 
         foreach ($visible as $logo) {
-            echo '<div class="wls-logo-item">';
-            echo '<div class="wls-logo-inner ' . esc_attr($hover_anim) . '">';
-            echo '<a href="' . esc_url($logo['link']) . '" target="_blank"><img src="' . esc_url($logo['src']) . '" alt="' . esc_attr($logo['title']) . '"></a>';
-            echo '</div>';
-            echo '</div>';
+            echo '<div class="wls-logo-item">
+                    <div class="wls-logo-inner ' . esc_attr($hover_class) . '">
+                        <a href="' . esc_url($logo['link']) . '" target="_blank">
+                            <img src="' . esc_url($logo['src']) . '" alt="' . esc_attr($logo['title']) . '"">
+                        </a>
+                    </div>
+                  </div>';
         }
 
         echo '<script class="wls-hidden-pool" type="application/json">' . json_encode($pool) . '</script>';
