@@ -179,3 +179,11 @@
     }
 }
 .rollOut { animation-name: rollOut; }
+
+.p-2 {
+    padding: 4px;
+}
+
+.wls-logo-inner a {
+    text-align: center;
+}
