@@ -204,7 +204,7 @@ class Webcom_Logo_Widget extends Widget_Base {
 
         foreach ($visible as $logo) {
             echo '<div class="wls-logo-item">
-                    <div class="wls-logo-inner ' . esc_attr($hover_class) . '">
+                    <div class="wls-logo-inner p-2 ' . esc_attr($hover_class) . '">
                         <a href="' . esc_url($logo['link']) . '" target="_blank">
                             <img src="' . esc_url($logo['src']) . '" alt="' . esc_attr($logo['title']) . '"">
                         </a>
